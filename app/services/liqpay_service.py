@@ -1,12 +1,31 @@
-from liqpay import LiqPay
-import json
+import hashlib
 import base64
+import json
 from typing import Dict, Optional
 from app.core.config import settings
 import logging
 import time
 
 logger = logging.getLogger(__name__)
+
+class LiqPay:
+    """Простий LiqPay клас без зовнішньої бібліотеки"""
+    def __init__(self, public_key: str, private_key: str):
+        self.public_key = public_key
+        self.private_key = private_key
+    
+    def cnb_data(self, params: dict) -> str:
+        params['public_key'] = self.public_key
+        json_string = json.dumps(params)
+        return base64.b64encode(json_string.encode('utf-8')).decode('utf-8')
+    
+    def cnb_signature(self, params: dict) -> str:
+        params['public_key'] = self.public_key
+        data = base64.b64encode(json.dumps(params).encode('utf-8')).decode('utf-8')
+        return self.str_to_sign(self.private_key + data + self.private_key)
+    
+    def str_to_sign(self, string: str) -> str:
+        return base64.b64encode(hashlib.sha1(string.encode('utf-8')).digest()).decode('utf-8')
 
 class LiqPayService:
     def __init__(self):
