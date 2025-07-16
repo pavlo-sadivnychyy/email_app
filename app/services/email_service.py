@@ -223,7 +223,7 @@ class EmailService:
             event = EmailEvent(
                 email_id=email_id,
                 event_type=event_type,
-                metadata=metadata or {},
+                event_metadata=metadata or {},
                 ip_address=metadata.get('ip') if metadata else None,
                 user_agent=metadata.get('user_agent') if metadata else None
             )

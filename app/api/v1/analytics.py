@@ -137,7 +137,7 @@ async def get_campaign_analytics(
     
     # Get top clicked links
     top_links = db.query(
-        EmailEvent.metadata['url'].label('url'),
+        EmailEvent.event_metadata['url'].label('url'),
         func.count(EmailEvent.id).label('clicks')
     ).filter(
         and_(
@@ -146,13 +146,13 @@ async def get_campaign_analytics(
                 db.query(Email.id).filter(Email.campaign_id == campaign_id)
             )
         )
-    ).group_by(EmailEvent.metadata['url']).order_by(
+    ).group_by(EmailEvent.event_metadata['url']).order_by(
         func.count(EmailEvent.id).desc()
     ).limit(5).all()
     
     # Get device statistics
     device_stats = db.query(
-        EmailEvent.metadata['device_type'].label('device'),
+        EmailEvent.event_metadata['device_type'].label('device'),
         func.count(EmailEvent.id).label('count')
     ).filter(
         and_(
@@ -161,11 +161,11 @@ async def get_campaign_analytics(
                 db.query(Email.id).filter(Email.campaign_id == campaign_id)
             )
         )
-    ).group_by(EmailEvent.metadata['device_type']).all()
+    ).group_by(EmailEvent.event_metadata['device_type']).all()
     
     # Get location statistics (by country)
     location_stats = db.query(
-        EmailEvent.metadata['country'].label('country'),
+        EmailEvent.event_metadata['country'].label('country'),
         func.count(EmailEvent.id).label('count')
     ).filter(
         and_(
@@ -174,7 +174,7 @@ async def get_campaign_analytics(
                 db.query(Email.id).filter(Email.campaign_id == campaign_id)
             )
         )
-    ).group_by(EmailEvent.metadata['country']).limit(10).all()
+    ).group_by(EmailEvent.event_metadata['country']).limit(10).all()
     
     return CampaignAnalytics(
         campaign_id=campaign_id,

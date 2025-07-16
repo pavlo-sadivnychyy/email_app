@@ -149,7 +149,7 @@ class EmailEvent(Base):
     id = Column(Integer, primary_key=True, index=True)
     email_id = Column(Integer, ForeignKey("emails.id"), nullable=False)
     event_type = Column(String, nullable=False)  # open, click, unsubscribe, bounce, complaint
-    metadata = Column(JSON)
+    event_metadata = Column(JSON)  # Перейменовано з metadata
     ip_address = Column(String)
     user_agent = Column(String)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
