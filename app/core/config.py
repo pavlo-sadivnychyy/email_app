@@ -40,7 +40,15 @@ class Settings(BaseSettings):
     S3_BUCKET_NAME: str = ""
     
     # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:5173"]
+    CORS_ORIGINS: str = '["http://localhost:3000", "http://localhost:5173"]'
+    
+    @property
+    def cors_origins_list(self) -> List[str]:
+        import json
+        try:
+            return json.loads(self.CORS_ORIGINS)
+        except:
+            return ["http://localhost:3000", "http://localhost:5173"]
     
     # Rate Limiting
     RATE_LIMIT_REQUESTS: int = 100
