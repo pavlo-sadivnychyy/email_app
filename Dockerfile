@@ -20,12 +20,8 @@ COPY . .
 # Create logs directory
 RUN mkdir -p logs
 
-# Copy start script
-COPY start.sh .
-RUN chmod +x start.sh
-
 # Expose port
 EXPOSE 8000
 
 # Run the application
-CMD ["./start.sh"]
+CMD ["python", "main.py"]
