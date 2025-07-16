@@ -128,18 +128,19 @@ Generate the email content:"""
         except Exception as e:
             logger.error(f"Failed to generate email content: {e}")
             # Fallback content
-            return f"""Hi {{{{first_name}}}},
-
-{purpose}
-
-We wanted to reach out to share something important with you.
-
-{' '.join(key_points) if key_points else 'This is an opportunity you won\'t want to miss.'}
-
-{call_to_action if call_to_action else 'Click here to learn more'}
-
-Best regards,
-{{{{sender_name}}}}"""
+            fallback = "Hi {{first_name}},\n\n"
+            fallback += f"{purpose}\n\n"
+            fallback += "We wanted to reach out to share something important with you.\n\n"
+            if key_points:
+                fallback += ' '.join(key_points) + "\n\n"
+            else:
+                fallback += "This is an opportunity you won't want to miss.\n\n"
+            if call_to_action:
+                fallback += f"{call_to_action}\n\n"
+            else:
+                fallback += "Click here to learn more\n\n"
+            fallback += "Best regards,\n{{sender_name}}"
+            return fallback
     
     def optimize_email(
         self,
