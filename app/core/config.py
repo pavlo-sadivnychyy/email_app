@@ -21,13 +21,10 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     
-    # Stripe
-    STRIPE_SECRET_KEY: str = ""
-    STRIPE_WEBHOOK_SECRET: str = ""
-    STRIPE_PRICE_ID_STARTER: str = ""
-    STRIPE_PRICE_ID_BUSINESS: str = ""
-    STRIPE_PRICE_ID_PROFESSIONAL: str = ""
-    STRIPE_PRICE_ID_ENTERPRISE: str = ""
+    # LiqPay
+    LIQPAY_PUBLIC_KEY: str = ""
+    LIQPAY_PRIVATE_KEY: str = ""
+    LIQPAY_SANDBOX_MODE: bool = True  # True для тестування
     
     # OpenAI
     OPENAI_API_KEY: str = ""
@@ -63,23 +60,15 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         extra = "allow"
-        
-    def get_stripe_price_id(self, plan: str) -> str:
-        price_map = {
-            "starter": self.STRIPE_PRICE_ID_STARTER,
-            "business": self.STRIPE_PRICE_ID_BUSINESS,
-            "professional": self.STRIPE_PRICE_ID_PROFESSIONAL,
-            "enterprise": self.STRIPE_PRICE_ID_ENTERPRISE,
-        }
-        return price_map.get(plan, "")
     
     def get_contact_limit(self, plan: str) -> int:
         limit_map = {
+            "free": 100,
             "starter": self.STARTER_CONTACT_LIMIT,
             "business": self.BUSINESS_CONTACT_LIMIT,
             "professional": self.PROFESSIONAL_CONTACT_LIMIT,
             "enterprise": self.ENTERPRISE_CONTACT_LIMIT,
         }
-        return limit_map.get(plan, self.STARTER_CONTACT_LIMIT)
+        return limit_map.get(plan, 100)
 
 settings = Settings()

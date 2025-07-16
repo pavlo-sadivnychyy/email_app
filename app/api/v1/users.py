@@ -79,18 +79,6 @@ async def delete_account(
             detail="Please confirm account deletion"
         )
     
-    # Cancel subscription if exists
-    if current_user.stripe_subscription_id:
-        from app.services.stripe_service import StripeService
-        stripe_service = StripeService()
-        
-        try:
-            stripe_service.cancel_subscription(
-                current_user.stripe_subscription_id
-            )
-        except Exception as e:
-            logger.error(f"Failed to cancel subscription: {e}")
-    
     # Delete user and all related data (cascade delete)
     db.delete(current_user)
     db.commit()

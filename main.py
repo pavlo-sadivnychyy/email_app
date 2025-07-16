@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 import logging
 from app.core.config import settings
 from app.core.database import engine, Base
-from app.api.v1 import auth, users, campaigns, contacts, templates, analytics, payments, webhooks
+from app.api.v1 import auth, users, campaigns, contacts, templates, analytics, payments_liqpay, webhooks_liqpay
 from app.api.v1.ai import ai_router
 from app.core.security import get_current_user
 from app.utils.logger import setup_logger
@@ -51,9 +51,9 @@ app.include_router(campaigns.router, prefix="/api/v1/campaigns", tags=["Campaign
 app.include_router(contacts.router, prefix="/api/v1/contacts", tags=["Contacts"])
 app.include_router(templates.router, prefix="/api/v1/templates", tags=["Templates"])
 app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["Analytics"])
-app.include_router(payments.router, prefix="/api/v1/payments", tags=["Payments"])
+app.include_router(payments_liqpay.router, prefix="/api/v1/payments", tags=["Payments"])
 app.include_router(ai_router, prefix="/api/v1/ai", tags=["AI"])
-app.include_router(webhooks.router, prefix="/api/v1/webhooks", tags=["Webhooks"])
+app.include_router(webhooks_liqpay.router, prefix="/api/v1/webhooks", tags=["Webhooks"])
 
 # Global exception handler
 @app.exception_handler(Exception)

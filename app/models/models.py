@@ -36,8 +36,6 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     is_verified = Column(Boolean, default=False)
     plan = Column(SQLEnum(UserPlan), default=UserPlan.FREE)
-    stripe_customer_id = Column(String, unique=True)
-    stripe_subscription_id = Column(String)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
@@ -46,6 +44,7 @@ class User(Base):
     contacts = relationship("Contact", back_populates="user", cascade="all, delete-orphan")
     templates = relationship("Template", back_populates="user", cascade="all, delete-orphan")
     api_keys = relationship("APIKey", back_populates="user", cascade="all, delete-orphan")
+    payments = relationship("Payment", back_populates="user", cascade="all, delete-orphan")
 
 class Campaign(Base):
     __tablename__ = "campaigns"
@@ -173,3 +172,26 @@ class APIKey(Base):
     user = relationship("User", back_populates="api_keys")
 
 from sqlalchemy import UniqueConstraint
+
+class Payment(Base):
+    __tablename__ = "payments"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    order_id = Column(String, unique=True, nullable=False, index=True)
+    liqpay_payment_id = Column(String)
+    subscription_id = Column(String)
+    plan = Column(String, nullable=False)
+    amount = Column(Float, nullable=False)
+    currency = Column(String, default="UAH")
+    status = Column(String, default="pending")
+    payment_type = Column(String, default="onetime")
+    months = Column(Integer, default=1)
+    error_description = Column(String)
+    expires_at = Column(DateTime(timezone=True))
+    cancelled_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    
+    # Relationships
+    user = relationship("User", back_populates="payments")

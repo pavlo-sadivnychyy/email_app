@@ -11,7 +11,6 @@ from app.schemas.schemas import (
     UserCreate, User as UserSchema, Token, LoginRequest
 )
 from app.services.email_service import EmailService
-from app.services.stripe_service import StripeService
 import logging
 
 logger = logging.getLogger(__name__)
@@ -39,17 +38,6 @@ async def register(
         full_name=user_data.full_name,
         company_name=user_data.company_name
     )
-    
-    # Create Stripe customer
-    stripe_service = StripeService()
-    try:
-        customer = stripe_service.create_customer(
-            email=user_data.email,
-            name=user_data.full_name
-        )
-        db_user.stripe_customer_id = customer.id
-    except Exception as e:
-        logger.error(f"Failed to create Stripe customer: {e}")
     
     db.add(db_user)
     db.commit()

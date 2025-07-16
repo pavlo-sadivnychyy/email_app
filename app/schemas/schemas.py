@@ -22,8 +22,6 @@ class UserInDB(UserBase):
     is_active: bool
     is_verified: bool
     plan: UserPlan
-    stripe_customer_id: Optional[str]
-    stripe_subscription_id: Optional[str]
     created_at: datetime
     updated_at: Optional[datetime]
     
