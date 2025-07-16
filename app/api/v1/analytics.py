@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func, and_
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional, List
 from app.core.database import get_db
 from app.core.security import get_current_verified_user
 from app.models.models import User, Campaign, Contact, Email, EmailEvent
